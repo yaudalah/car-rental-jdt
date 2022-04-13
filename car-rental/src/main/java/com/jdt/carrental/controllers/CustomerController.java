@@ -1,2 +1,4 @@
-package com.jdt.carrental.controllers;public class CustomerController {
+package com.jdt.carrental.controllers;
+
+public class CustomerController {
 }
