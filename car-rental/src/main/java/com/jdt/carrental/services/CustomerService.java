@@ -19,22 +19,22 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
 
     public boolean createAccountCustomer(Customer customer) {
-        log.info("Akun pelanggan dengan nama {} telah terbuat",customer.getCustomerName());
         List<Customer> daftarCustomer = customerRepository.findAll();
-        for (Customer c: daftarCustomer) {
-            if (c.getPhoneNumber().toString().equals(customer.getPhoneNumber().toString())) {
-                log.info("Akun pelanggan dengan nomer telepon {} telah terdaftar", customer.getPhoneNumber());
+        for (Customer c : daftarCustomer) {
+            if (c.getEmail().equals(customer.getEmail())) {
+                log.info("Akun pelanggan dengan email {} telah terdaftar", customer.getEmail());
                 return false;
             }
         }
         customerRepository.save(customer);
+        log.info("Akun pelanggan dengan nama {} telah terbuat", customer.getCustomerName());
         return true;
     }
 
     public Object login(LoginDTO loginDTO) {
         Customer cariCustomer = customerRepository.findByEmail(loginDTO.getEmail())
                 .orElse(null);
-        if (cariCustomer!=null) {
+        if (cariCustomer != null) {
             if (cariCustomer.getPassword().equals(loginDTO.getPassword())) {
                 LoginDTO CustomerDTO = new LoginDTO();
                 CustomerDTO.setEmail(cariCustomer.getEmail());
