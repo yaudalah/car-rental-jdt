@@ -12,20 +12,16 @@ import javax.persistence.*;
 public class Customer extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_customer")
     private Long idCustomer;
 
     @Column(name = "customer_name", length = 25, nullable = false)
     private String customerName;
-
-    private Long NIK;
 
     @Column(nullable = false)
     private String email;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-
-    @Column(nullable = false)
-    private String password;
 
 }

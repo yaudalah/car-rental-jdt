@@ -31,19 +31,4 @@ public class CustomerService {
         return true;
     }
 
-    public Object login(LoginDTO loginDTO) {
-        Customer cariCustomer = customerRepository.findByEmail(loginDTO.getEmail())
-                .orElse(null);
-        if (cariCustomer != null) {
-            if (cariCustomer.getPassword().equals(loginDTO.getPassword())) {
-                LoginDTO CustomerDTO = new LoginDTO();
-                CustomerDTO.setEmail(cariCustomer.getEmail());
-                CustomerDTO.setPassword(cariCustomer.getPassword());
-                log.info("Akun Customer dengan email {} telah login", loginDTO.getEmail());
-                return CustomerDTO;
-            }
-        }
-        return false;
-    }
-
 }
