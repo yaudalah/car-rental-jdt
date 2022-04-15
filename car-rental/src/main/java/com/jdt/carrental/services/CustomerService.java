@@ -1,6 +1,5 @@
 package com.jdt.carrental.services;
 
-import com.jdt.carrental.dto.LoginDTO;
 import com.jdt.carrental.models.Customer;
 import com.jdt.carrental.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
