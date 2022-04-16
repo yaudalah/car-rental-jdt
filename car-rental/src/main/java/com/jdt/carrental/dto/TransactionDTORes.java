@@ -1,23 +1,22 @@
 package com.jdt.carrental.dto;
 
-import com.jdt.carrental.models.TransactionOrder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-
-import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
 @Setter
-public class TransactionDTO {
-
-    private long idTransaction;
-    private long idDriver;
-    private long idVehicle;
-    private long idPaymentMethod;
+public class TransactionDTORes {
+    //payment
+    private String paymentMethodName;
+    private String noRek;
+    //vehicle
+    private String vehicleName;
+    private BigDecimal pricePerHour;
+    //driver
+    private String driverName;
     //customer
     private String customerName;
     private String email;
@@ -25,7 +24,5 @@ public class TransactionDTO {
     //transaction
     private Date startHour;
     private Date finishHour;
-
-    private TransactionOrder.TransactionStatus transactionStatus;
-
+    private BigDecimal totalPrice;
 }

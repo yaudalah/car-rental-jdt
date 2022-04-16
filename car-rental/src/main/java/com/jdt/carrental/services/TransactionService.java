@@ -1,22 +1,91 @@
 package com.jdt.carrental.services;
 
-import com.jdt.carrental.models.Customer;
-import com.jdt.carrental.repositories.TransactionRepository;
+import com.jdt.carrental.dto.TransactionDTO;
+import com.jdt.carrental.dto.TransactionDTORes;
+import com.jdt.carrental.models.*;
+import com.jdt.carrental.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class TransactionService {
-    private final DriverService driverService;
-    private final CustomerService customerService;
+    private final DriverRepository driverRepository;
+    private final CustomerRepository customerRepository;
+    private final VehicleRepository vehicleRepository;
+    private final PaymentMethodRepository paymentMethodRepository;
     private final TransactionRepository transactionRepository;
 
-    void createOrder(String customerName, String email, String phoneNumber) {
-        Customer c = new Customer();
-        c.setCustomerName(customerName);
-        c.setEmail(email);
-        c.setPhoneNumber(phoneNumber);
-        
+    @Transactional
+    public TransactionDTORes createOrder(TransactionDTO transactionDTO) {
+
+        Customer customer = new Customer();
+        customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
+        customer.setCustomerName(transactionDTO.getCustomerName());
+        customer.setEmail(transactionDTO.getEmail());
+        customer.setPhoneNumber(transactionDTO.getPhoneNumber());
+        customerRepository.save(customer);
+
+        Driver driver = new Driver();
+        if(transactionDTO.getIdDriver()!=0) {
+            driver = driverRepository.findById(transactionDTO.getIdDriver()).orElse(null);
+            if (driver != null) {
+                driver.setDriverAvailability(Driver.DriverAvailability.BOOKED);
+                driverRepository.save(driver);
+            } else {
+                throw new ServiceException("Driver tidak ditemukan");
+            }
+        }
+
+        Vehicle vehicle = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
+        if (vehicle != null) {
+            vehicle.setVehicleAvailability(Vehicle.VehicleAvailability.BOOKED);
+            vehicleRepository.save(vehicle);
+        } else {
+            throw new ServiceException("Mobil tidak ditemukan");
+        }
+
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(transactionDTO
+                .getIdPaymentMethod()).orElse(null);
+        assert paymentMethod != null;
+
+        TransactionOrder transactionOrder = new TransactionOrder();
+        if(transactionDTO.getIdDriver()!=0){
+            transactionOrder.setIdDriver(transactionDTO.getIdDriver());
+        }
+        transactionOrder.setIdVehicle(vehicle.getIdVehicle());
+        transactionOrder.setIdPaymentMethod(paymentMethod.getIdPaymentMethod());
+        transactionOrder.setIdCustomer(customer.getIdCustomer());
+        transactionOrder.setStartHour(transactionDTO.getStartHour());
+        transactionOrder.setFinishHour(transactionDTO.getFinishHour());
+        transactionOrder.setTransactionStatus(TransactionOrder.TransactionStatus.ON_GOING);
+        transactionOrder.setTotalPrice(
+                BigDecimal.valueOf(
+                        transactionDTO.getFinishHour().getHours() - transactionDTO.getStartHour().getHours()
+                        ).multiply(vehicle.getPricePerHour())
+        );
+        transactionRepository.save(transactionOrder);
+
+        TransactionDTORes response = new TransactionDTORes();
+        response.setPaymentMethodName(paymentMethod.getPaymentMethodName());
+        response.setNoRek(paymentMethod.getNoRek());
+        response.setVehicleName(vehicle.getVehicleName());
+        response.setPricePerHour(vehicle.getPricePerHour());
+        response.setDriverName(driver.getDriverName());
+        response.setCustomerName(customer.getCustomerName());
+        response.setEmail(customer.getEmail());
+        response.setPhoneNumber(customer.getPhoneNumber());
+        response.setStartHour(transactionOrder.getStartHour());
+        response.setFinishHour(transactionOrder.getFinishHour());
+        response.setTotalPrice(transactionOrder.getTotalPrice());
+
+        return response;
     }
+
+
 }

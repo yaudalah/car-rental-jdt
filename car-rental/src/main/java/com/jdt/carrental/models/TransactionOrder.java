@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -29,21 +28,22 @@ public class TransactionOrder {
 
     private long idDriver;
 
-    @Column(name = "start_hour")
-    private Instant startHour;
+    private long idPaymentMethod;
 
+    @Column(name = "start_hour")
+    private Date startHour;
 
     @Column(name = "finish_hour")
-    private Instant finishHour;
+    private Date finishHour;
 
     @Column(name = "order_status",nullable = false)
     @Enumerated
-    private TransactionStatus orderStatus;
+    private TransactionStatus transactionStatus;
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
-    enum TransactionStatus {
+    public enum TransactionStatus {
         ON_GOING,
         FINISH
     }
