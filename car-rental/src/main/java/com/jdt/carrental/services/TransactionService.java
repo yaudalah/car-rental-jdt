@@ -1,7 +1,9 @@
 package com.jdt.carrental.services;
 
+import com.jdt.carrental.dao.TransactionDao;
 import com.jdt.carrental.dto.TransactionDTO;
 import com.jdt.carrental.dto.TransactionDTORes;
+import com.jdt.carrental.dto.map.OrderDetailsMap;
 import com.jdt.carrental.models.*;
 import com.jdt.carrental.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class TransactionService {
     private final VehicleRepository vehicleRepository;
     private final PaymentMethodRepository paymentMethodRepository;
     private final TransactionRepository transactionRepository;
+    private final TransactionDao transactionDao;
 
     @Transactional
     public TransactionDTORes createOrder(TransactionDTO transactionDTO) {
@@ -32,7 +37,7 @@ public class TransactionService {
         customerRepository.save(customer);
 
         Driver driver = new Driver();
-        if(transactionDTO.getIdDriver()!=0) {
+        if (transactionDTO.getIdDriver() != 0) {
             driver = driverRepository.findById(transactionDTO.getIdDriver()).orElse(null);
             if (driver != null) {
                 driver.setDriverAvailability(Driver.DriverAvailability.BOOKED);
@@ -55,7 +60,7 @@ public class TransactionService {
         assert paymentMethod != null;
 
         TransactionOrder transactionOrder = new TransactionOrder();
-        if(transactionDTO.getIdDriver()!=0){
+        if (transactionDTO.getIdDriver() != 0) {
             transactionOrder.setIdDriver(transactionDTO.getIdDriver());
         }
         transactionOrder.setIdVehicle(vehicle.getIdVehicle());
@@ -67,7 +72,7 @@ public class TransactionService {
         transactionOrder.setTotalPrice(
                 BigDecimal.valueOf(
                         transactionDTO.getFinishHour().getHours() - transactionDTO.getStartHour().getHours()
-                        ).multiply(vehicle.getPricePerHour())
+                ).multiply(vehicle.getPricePerHour())
         );
         transactionRepository.save(transactionOrder);
 
@@ -85,6 +90,36 @@ public class TransactionService {
         response.setTotalPrice(transactionOrder.getTotalPrice());
 
         return response;
+    }
+
+
+    public List<OrderDetailsMap> findAllOnGoingTransaction() {
+        return transactionDao.getAllOngoingTransaction();
+    }
+
+    public List<OrderDetailsMap> findAllTransactionHistory() {
+        return transactionDao.getAllTransaction();
+    }
+
+    public List<OrderDetailsMap> finishTransaction(Long id) {
+        TransactionOrder transactionOrder = transactionRepository.findById(id).orElse(null);
+        if (transactionOrder != null) {
+             transactionOrder.setTransactionStatus(TransactionOrder.TransactionStatus.FINISH);
+             //disini jika penghitungan ulang total price
+            transactionRepository.save(transactionOrder);
+            if(transactionOrder.getIdDriver()!=0){
+                Driver driver = driverRepository.findById(transactionOrder.getIdDriver()).orElse(null);
+                assert driver != null;
+                driver.setDriverAvailability(Driver.DriverAvailability.AVAILABLE);
+                driverRepository.save(driver);
+            }
+           Vehicle vehicle = vehicleRepository.findById(transactionOrder.getIdVehicle()).orElse(null);
+            assert vehicle != null;
+            vehicle.setVehicleAvailability(Vehicle.VehicleAvailability.AVAILABLE);
+            vehicleRepository.save(vehicle);
+            return  transactionDao.getAllTransaction();
+        }
+            return null;
     }
 
 
