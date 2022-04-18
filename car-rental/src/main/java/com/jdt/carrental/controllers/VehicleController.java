@@ -17,7 +17,7 @@ public class VehicleController {
 
     private final VehicleService vehicleService;
 
-    @PostMapping
+    @PostMapping("/create-vehicle")
     public ResponseEntity<Object> createVehicle(@RequestBody Vehicle vehicle) {
         Object dataVehicle = vehicleService.createVehicle(vehicle);
         if (dataVehicle.equals(false)) {
@@ -36,7 +36,7 @@ public class VehicleController {
     }
 
     @ResponseBody
-    @GetMapping("/all-vehicles")
+    @GetMapping("/get-all-vehicles")
     public ResponseEntity<List<Vehicle>> getAllVehiclses() {
         List<Vehicle> vehicleDTOS = vehicleService.getAllAvailableVehicles();
         return new ResponseEntity<>(vehicleDTOS,HttpStatus.OK);

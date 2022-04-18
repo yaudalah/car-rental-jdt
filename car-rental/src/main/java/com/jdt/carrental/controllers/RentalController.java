@@ -10,11 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/order")
+@RequestMapping("/api/v1/order")
 public class RentalController {
 
     private final TransactionService transactionService;
@@ -28,19 +27,19 @@ public class RentalController {
        return new ResponseEntity<>(dataTransactionDTO,HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAllOnGoingTransaction")
+    @GetMapping("/get-all-on-going-transaction")
     public ResponseEntity<List<OrderDetailsMap>> getAllOnGoingTransaction(){
         return new ResponseEntity<List<OrderDetailsMap>>(transactionService.findAllOnGoingTransaction(),HttpStatus.OK);
-  }
+    }
 
-  @PostMapping("/finishOrder/{id}")
+    @PostMapping("/finish-order/{id}")
     public ResponseEntity< List<OrderDetailsMap>> finishOrder(@PathVariable("id") Long idTrans){
       List<OrderDetailsMap> result = transactionService.finishTransaction(idTrans);
         return new ResponseEntity< List<OrderDetailsMap>>(result,HttpStatus.OK);
-  }
+    }
 
-  @GetMapping("/history")
-  public ResponseEntity<List<OrderDetailsMap>> getAllTransactionHistory(){
+    @GetMapping("/history")
+    public ResponseEntity<List<OrderDetailsMap>> getAllTransactionHistory(){
       return new ResponseEntity<List<OrderDetailsMap>>(transactionService.findAllTransactionHistory(),HttpStatus.OK);
-  }
+    }
 }

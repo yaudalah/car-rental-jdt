@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/driver")
+@RequestMapping("/api/v1/driver")
 public class DriverController {
 
     private final DriverService driverService;
 
-    @PostMapping
+    @PostMapping("/create-driver")
     public ResponseEntity<String> createDriver(@RequestBody Driver driver) {
         driverService.createDriver(driver);
         return new ResponseEntity<String>("driver created",HttpStatus.CREATED);
     }
 
-    @GetMapping("/all-drivers")
+    @GetMapping("/get-all-drivers")
     public ResponseEntity<Object> getDrivers() {
         Object dataDrivers = driverService.getAllDrivers();
         if (dataDrivers.equals(false)) {

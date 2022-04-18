@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -16,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "transaction_order")
-public class TransactionOrder {
+public class TransactionOrder extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_transaction")
