@@ -21,8 +21,8 @@ public class TransactionDTO {
     private String email;
     private String phoneNumber;
     //transaction
-    private Date startHour;
-    private Date finishHour;
+    private Instant startHour;
+    private Instant finishHour;
 
     private TransactionOrder.TransactionStatus transactionStatus;
 

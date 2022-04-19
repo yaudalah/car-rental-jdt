@@ -19,7 +19,7 @@ public class OnGoingOrderResultSetExtractor implements ResultSetExtractor<List<O
             OrderDetailsMap orderDetailsMap = new OrderDetailsMap();
 
             orderDetailsMap.setPaymentMethodName(rs.getString("payment_method"));
-            orderDetailsMap.setPaymentMethodName(rs.getString("no_rek"));
+            orderDetailsMap.setNoRek(rs.getString("no_rek"));
             orderDetailsMap.setIdVehicle(rs.getLong("id_vehicle"));
             orderDetailsMap.setVehicleName(rs.getString("vehicle_name"));
             orderDetailsMap.setPricePerHour(rs.getBigDecimal("price_per_hour"));

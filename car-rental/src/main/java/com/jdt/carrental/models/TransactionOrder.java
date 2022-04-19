@@ -33,10 +33,12 @@ public class TransactionOrder extends BaseModel {
     private long idPaymentMethod;
 
     @Column(name = "start_hour")
-    private Date startHour;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
+    private Instant startHour;
 
     @Column(name = "finish_hour")
-    private Date finishHour;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
+    private Instant finishHour;
 
     @Column(name = "order_status",nullable = false)
     @Enumerated

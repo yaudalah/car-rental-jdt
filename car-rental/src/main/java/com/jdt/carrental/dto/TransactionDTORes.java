@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -22,7 +23,7 @@ public class TransactionDTORes {
     private String email;
     private String phoneNumber;
     //transaction
-    private Date startHour;
-    private Date finishHour;
+    private Instant startHour;
+    private Instant finishHour;
     private BigDecimal totalPrice;
 }

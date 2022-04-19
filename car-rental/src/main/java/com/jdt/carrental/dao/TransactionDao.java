@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-
+@RequiredArgsConstructor
 @Service
 public class TransactionDao {
 
@@ -29,11 +29,9 @@ public class TransactionDao {
 //        }).get(0).intValue();
 //    }
 
-    @Autowired
-    private JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
-    @Autowired
-    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final static String sql_getAllOngoingTransaction =
             "SELECT \n" +
