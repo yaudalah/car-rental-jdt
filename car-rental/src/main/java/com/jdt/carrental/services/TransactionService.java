@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +72,6 @@ public class TransactionService {
         transactionOrder.setTransactionStatus(TransactionOrder.TransactionStatus.ON_GOING);
         transactionOrder.setTotalPrice(
                 BigDecimal.valueOf(
-//                    transactionDTO.getFinishHour() transactionDTO.getStartHour()
                     Duration.between(transactionDTO.getStartHour(), transactionDTO.getFinishHour())
                     .toMinutes() / 60
                 ).multiply(vehicle.getPricePerHour())
