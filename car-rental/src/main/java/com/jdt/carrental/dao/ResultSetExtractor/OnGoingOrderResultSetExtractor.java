@@ -29,8 +29,8 @@ public class OnGoingOrderResultSetExtractor implements ResultSetExtractor<List<O
             orderDetailsMap.setEmail(rs.getString("email"));
             orderDetailsMap.setPhoneNumber(rs.getString("phone_number"));
             orderDetailsMap.setIdTransaction(rs.getLong("id_transaction"));
-            orderDetailsMap.setStartHour(rs.getDate("start_hour"));
-            orderDetailsMap.setFinishHour(rs.getDate("finish_hour"));
+            orderDetailsMap.setStartHour(rs.getTimestamp("start_hour"));
+            orderDetailsMap.setFinishHour(rs.getTimestamp("finish_hour"));
             orderDetailsMap.setTotalPrice(rs.getBigDecimal("total_price"));
 
             orderDetailsMaps.add(orderDetailsMap);

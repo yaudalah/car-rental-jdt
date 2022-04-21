@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/payment-method")
 public class PaymentController {

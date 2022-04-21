@@ -28,7 +28,7 @@ function App() {
         <Route path ="/mainapp" element={<MainApp />} />        
         <Route path ="/ongoingrental" element={<OnGoingRental />} />        
         <Route path ="/history" element={<History />} />
-        <Route path ="/menumobil" element={<MenuMobil />} />        
+        <Route path ="/menumobil/:id" element={<MenuMobil />} />        
         <Route path ="/cars" element={<cars />} />        
       </Routes>
     </div>

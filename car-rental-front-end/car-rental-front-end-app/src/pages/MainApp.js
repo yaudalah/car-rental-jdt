@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import './css/index.css'
 import './css/gallery.css'
@@ -10,6 +10,7 @@ import Card from '../component/Card';
 export const MainApp = () => {
 
     const [car, setCar] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(()=> {
         fetchCars();
@@ -18,7 +19,7 @@ export const MainApp = () => {
     const fetchCars = async() => {
         const carsArray = [];
         try {
-            const getCars = await axios("http://localhost:8080/api/v1/vehicle/get-all-vehicles");
+            const getCars = await axios.get("http://localhost:8080/api/v1/vehicle/get-all-vehicles");
             carsArray.push(...getCars.data);
             setCar(carsArray);
             console.log("test");
@@ -91,6 +92,7 @@ export const MainApp = () => {
                 <div className="row mx-auto justify-content-center text-center">
                     <Card
                         car={car}
+                        navigate={navigate}
                     />
                 </div>
 {/* ================================================================= FOOTER ===================================================== */}
@@ -132,7 +134,6 @@ export const MainApp = () => {
                 </div>
             </footer>
         </div>
-        }
         </>
 
     )

@@ -1,13 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import './css/index.css'
 import './css/gallery.css'
-
+import axios from 'axios';
 
 
 export const MenuMobil = () => {
+  const [car, setCar] = useState([]);
+  const [driver, setDriver] = useState([]);
+  const navigate = useNavigate();
+  const params = useParams();
+
+    useEffect(()=> {
+      if (params.id) {
+        fetchCars(params.id);
+      }
+    },[params]) 
+
+    const fetchCars = async(id) => {
+      try {
+          const getCars = await fetch("http://localhost:8080/api/v1/vehicle/"+id);
+          const response = await getCars.json();
+          setCar(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const fetchDriver = async() => {
+      try {
+        const drivers = [];
+        const payload = await axios.get("http://localhost:8080/api/v1/get-all-drivers");
+        drivers.push(...payload.data);
+        setDriver(drivers);
+        console.log(drivers);
+      } catch (error) {
+        
+      }
+    }
+
   return (
     <div>
 {/*============================================================ HEADER ===========================================================================*/}
@@ -54,94 +87,88 @@ export const MenuMobil = () => {
       </nav>
 
 {/*============================================================ BOX ===========================================================================*/}
-      <div className="gallery-grid2 container">
-          
-        <div className="gallery-frame2 text-center" >
-          <img src="./images/car27.min.jpg" class="h-1000 w-75" />
-              {/* <!-- Lancer --> */}
-          <p>MITSUBISHI LANCER</p>
-          <p>Kapasitas = 5 Orang</p>
-          <p>Harga /jam = Rp.</p>
+      <div className="row mx-auto justify-content-center text-center">
+        <div className="gallery-grid2 container">
+          <h1>{car.vehicleName}</h1>
         </div>
+      </div>
 
 {/*========================================================== INPUT DATA ===========================================================================*/}
 
-          <div className="gallery-frame3" >
+          <div className="gallery-frame3 mx-auto" >
           
-          <form>
-            <div class="mb-3">
-              <label for="form-control" class="form-label">Nama Lengkap</label>
-              <input type="text" class="form-control" id="exampleInputname" />
-            </div>
+            <form>
+              <div class="mb-3">
+                <label for="form-control" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="exampleInputname" />
+              </div>
 
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-            </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+              </div>
 
-            <div class="mb-3">
-              <label for="exampleInputEmail" class="form-label">No Telpon</label>
-              <input type="email" class="form-control" id="exampleInputEmail"/>
-            </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail" class="form-label">No Telpon</label>
+                <input type="number" class="form-control" id="exampleInputEmail"/>
+              </div>
 
-            <div class="input-group mb-3">
               <div class="input-group mb-3">
-                <select class="form-select" id="inputGroupSelect01">
-                  <option selected>Pilih Driver</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
+                <div class="input-group mb-3">
 
-            <div class="mb-3">
-              <div class="input-group mb-3">
-                <select class="form-select" id="inputGroupSelect01">
-                  <option selected>Pilih Pembayaran</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <div className="row">
-                <div className="col-6">
-                <label for="tanggalpertama" class="form-label">Tanggal Pertama</label>
-                  <div class="input-group mb-3">
-
-                    <input type="date" id="tanggal"></input>
-
-                  </div>
+                  <select class="form-select" id="inputGroupSelect01">
+                    <option selected>Pilih Driver</option>
+                    <option value="0">One</option>
+                    <option value="1"></option>
+                    <option value="3">Three</option>
+                  </select>
                 </div>
-
-                <div className="col-6">
-                <label for="tanggalpertama" class="form-label">Tanggal Kedua</label>
-                  <div class="input-group mb-3">
-
-                    <input type="date" id="tanggal"></input>
-
-                  </div>
-                </div>
-
               </div>
-            </div>
 
-    
-            <label for="totalharga" class="form-label">Total Harga Rp.</label>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
+              <div class="mb-3">
+                <div class="input-group mb-3">
+                  <select class="form-select" id="inputGroupSelect01">
+                    <option selected>Pilih Pembayaran</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div className="row">
+                  <div className="col-6">
+                  <label for="tanggalpertama" class="form-label">Tanggal Pertama</label>
+                    <div class="input-group mb-3">
+
+                      <input type="date" id="tanggal"></input>
+
+                    </div>
+                  </div>
+
+                  <div className="col-6">
+                  <label for="tanggalpertama" class="form-label">Tanggal Kedua</label>
+                    <div class="input-group mb-3">
+
+                      <input type="date" id="tanggal"></input>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+      
+              <label for="totalharga" class="form-label">Total Harga Rp.</label>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
           
           </div>
-        
-        </div>
 
-
-        {/* ================================================================= FOOTER ===================================================== */}
+{/* ================================================================= FOOTER ===================================================== */}
 
         <footer class="py-5 d-flex justify-content-center">
                 <div class="container-footer w-90 mx-auto container">
@@ -178,7 +205,9 @@ export const MenuMobil = () => {
                         </div>
                     </div>
                 </div>
-            </footer>
+        </footer>
     </div>
   )
 }
+
+export default MenuMobil

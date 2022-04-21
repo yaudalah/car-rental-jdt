@@ -1,9 +1,7 @@
 package com.jdt.carrental.dto.map;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -25,8 +23,8 @@ public class OrderDetailsMap {
     private String phoneNumber;
     //transaction
     private long idTransaction;
-    private Date startHour;
-    private Date finishHour;
+    private Timestamp startHour;
+    private Timestamp finishHour;
     private BigDecimal totalPrice;
 
     public String getPaymentMethodName() {
@@ -117,19 +115,19 @@ public class OrderDetailsMap {
         this.idTransaction = idTransaction;
     }
 
-    public Date getStartHour() {
+    public Timestamp getStartHour() {
         return startHour;
     }
 
-    public void setStartHour(Date startHour) {
+    public void setStartHour(Timestamp startHour) {
         this.startHour = startHour;
     }
 
-    public Date getFinishHour() {
+    public Timestamp getFinishHour() {
         return finishHour;
     }
 
-    public void setFinishHour(Date finishHour) {
+    public void setFinishHour(Timestamp finishHour) {
         this.finishHour = finishHour;
     }
 

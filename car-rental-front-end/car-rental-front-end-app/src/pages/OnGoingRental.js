@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Link } from "react-router-dom";
+import OnGoingList from '../component/OnGoingList';
+import axios from 'axios';
 
 
 
 export const OnGoingRental = () => {
+
+    const [car, setCarOnGoing] = useState([]);
+
+    useEffect(()=> {
+        fetchCarsOnGoing();
+    },[]) 
+
+    const fetchCarsOnGoing = async() => {
+        const carsOnGoing = [];
+        try {
+            const payload = await axios.get("http://localhost:8080/api/v1/order/get-all-on-going-transaction");
+            carsOnGoing.push(...payload.data);
+            setCarOnGoing(carsOnGoing);
+            console.log("sss");
+            console.log(carsOnGoing);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div>
             {/*============================================================ HEADER ===========================================================================*/}
@@ -62,26 +84,15 @@ export const OnGoingRental = () => {
                     </div>
                 </div>
             </nav>
-            <div className="gallery-grid2 container">
+            <div className="gallery-grid2 container"></div>
   
-  {/*========================================================== INPUT DATA ===========================================================================*/}
-  
-            <div className="history" >
-                
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <Link to="/History" class="btn btn-primary me-md-2" type="button">Selesai</Link>
-                </div>
-            </div>
-
-                <div className="history" >
-                
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <Link to="/History" class="btn btn-primary me-md-2" type="button">Selesai</Link>
-                    </div>
-                </div>
+            {/*========================================================== INPUT DATA ===========================================================================*/}
             
-            </div>
-{/* ================================================================= FOOTER ===================================================== */}
+            <OnGoingList
+                car={car}
+            />
+
+            {/* ================================================================= FOOTER ===================================================== */}
 
             <footer class="py-5">
                 <div class="container-footer w-90 mx-auto container">
@@ -119,7 +130,7 @@ export const OnGoingRental = () => {
                     </div>
                 </div>
             </footer>
- {/* =================================================================================================================================== */}           
+             {/* =================================================================================================================================== */}           
         </div>
 
     )

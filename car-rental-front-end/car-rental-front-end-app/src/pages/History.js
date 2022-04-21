@@ -1,10 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Link } from "react-router-dom";
-
-
+import axios from 'axios';
+import HistoryList from '../component/HistoryList';
 
 export const History = () => {
+
+    const [car, setCarHistory] = useState([]);
+
+    useEffect(()=> {
+        fetchCarsHistory();
+    },[]) 
+
+    const fetchCarsHistory = async() => {
+        const carsHistory = [];
+        try {
+            const payload = await axios.get("http://localhost:8080/api/v1/order/history");
+            carsHistory.push(...payload.data);
+            setCarHistory(carsHistory);
+            console.log("sss");
+            console.log(carsHistory);
+        } catch (error) {
+            console.error(error);
+        }
+    }       
+
     return (
         <div>
 {/*============================================================ HEADER ===========================================================================*/}
@@ -35,7 +55,7 @@ export const History = () => {
                     </div>
                 </div>
                 <div className="col-md-6">
-                <img src="./images/yellow.car.svg" alt="main img" class="h-100 w-100 " />
+                <img src="./images/yellow.car.svg" alt="main img" class="h-100 w-100" />
                 </div>
             </div> 
 
@@ -65,17 +85,10 @@ export const History = () => {
             
   
 {/*========================================================== INPUT DATA ===========================================================================*/}
-            <div className="gallery-grid2 container">
-                <div className="history" >
-                        
-                </div>
 
-                <div className="history" >
-                        
-                            
-                </div>
-                    
-            </div>
+        <HistoryList
+            car={car}
+        />
 {/* ================================================================= FOOTER ===================================================== */}
 
 <footer class="py-5">
@@ -120,3 +133,5 @@ export const History = () => {
     )
     
   }
+
+  export default History
