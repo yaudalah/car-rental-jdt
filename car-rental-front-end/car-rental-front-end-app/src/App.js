@@ -5,7 +5,6 @@ import { Routes, Route } from 'react-router-dom';
 
 import {Header} from './pages/Header';
 import {MainContainer} from './pages/MainContainer';
-
 import { MainApp } from './pages/MainApp';
 import { MenuMobil } from './pages/MenuMobil';
 import { OnGoingRental } from './pages/OnGoingRental';

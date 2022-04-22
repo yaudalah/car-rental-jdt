@@ -15,10 +15,12 @@ export const History = () => {
     const fetchCarsHistory = async() => {
         const carsHistory = [];
         try {
-            const payload = await axios.get("http://localhost:8080/api/v1/order/history");
-            carsHistory.push(...payload.data);
-            setCarHistory(carsHistory);
-            console.log("sss");
+            await axios.get("http://localhost:8080/api/v1/order/history").then(res =>{
+                carsHistory.push(...res.data);
+                setCarHistory(carsHistory);
+            }).catch(err =>{
+                console.error(err);
+            });
             console.log(carsHistory);
         } catch (error) {
             console.error(error);
@@ -28,9 +30,9 @@ export const History = () => {
     return (
         <div>
 {/*============================================================ HEADER ===========================================================================*/}
-<           nav className="nav navbar fixed-top">
+<           nav className="nav navbar" style={{backgroundColor: "#cfd4ed"}}>
                 <div className="container-fluid d-flex justify-content-between w-90">
-                    <Link to="/" >Invisible Boat Mobile</Link>
+                    <Link to="/" ><h1>IBM</h1></Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">
                         <span className="navbar-toggler-icon"></span>

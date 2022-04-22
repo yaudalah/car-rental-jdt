@@ -30,31 +30,8 @@ public class TransactionService {
     @Transactional
     public TransactionDTORes createOrder(TransactionDTO transactionDTO) {
 
-        Customer customer = new Customer();
-        customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
-        customer.setCustomerName(transactionDTO.getCustomerName());
-        customer.setEmail(transactionDTO.getEmail());
-        customer.setPhoneNumber(transactionDTO.getPhoneNumber());
-        customerRepository.save(customer);
-
         Driver driver = new Driver();
-        if (transactionDTO.getIdDriver() != 0) {
-            driver = driverRepository.findById(transactionDTO.getIdDriver()).orElse(null);
-            if (driver != null) {
-                driver.setDriverAvailability(Driver.DriverAvailability.BOOKED);
-                driverRepository.save(driver);
-            } else {
-                throw new ServiceException("Driver tidak ditemukan");
-            }
-        }
-
         Vehicle vehicle = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
-        if (vehicle != null) {
-            vehicle.setVehicleAvailability(Vehicle.VehicleAvailability.BOOKED);
-            vehicleRepository.save(vehicle);
-        } else {
-            throw new ServiceException("Mobil tidak ditemukan");
-        }
 
         PaymentMethod paymentMethod = paymentMethodRepository.findById(transactionDTO
                 .getIdPaymentMethod()).orElse(null);
@@ -64,6 +41,7 @@ public class TransactionService {
         if (transactionDTO.getIdDriver() != 0) {
             transactionOrder.setIdDriver(transactionDTO.getIdDriver());
         }
+        assert vehicle != null;
         transactionOrder.setIdVehicle(vehicle.getIdVehicle());
         transactionOrder.setIdPaymentMethod(paymentMethod.getIdPaymentMethod());
         transactionOrder.setIdCustomer(customer.getIdCustomer());
@@ -76,22 +54,54 @@ public class TransactionService {
                     .toMinutes() / 60
                 ).multiply(vehicle.getPricePerHour())
         );
-        transactionRepository.save(transactionOrder);
+        if (transactionDTO.getFinishHour().isAfter(transactionDTO.getStartHour())) {
 
-        TransactionDTORes response = new TransactionDTORes();
-        response.setPaymentMethodName(paymentMethod.getPaymentMethodName());
-        response.setNoRek(paymentMethod.getNoRek());
-        response.setVehicleName(vehicle.getVehicleName());
-        response.setPricePerHour(vehicle.getPricePerHour());
-        response.setDriverName(driver.getDriverName());
-        response.setCustomerName(customer.getCustomerName());
-        response.setEmail(customer.getEmail());
-        response.setPhoneNumber(customer.getPhoneNumber());
-        response.setStartHour(transactionOrder.getStartHour());
-        response.setFinishHour(transactionOrder.getFinishHour());
-        response.setTotalPrice(transactionOrder.getTotalPrice());
+            // save customer
+            Customer customer = new Customer();
+            customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
+            customer.setCustomerName(transactionDTO.getCustomerName());
+            customer.setEmail(transactionDTO.getEmail());
+            customer.setPhoneNumber(transactionDTO.getPhoneNumber());
+            customerRepository.save(customer);
 
-        return response;
+            // change driver availability
+            if (transactionDTO.getIdDriver() != 1) {
+                driver = driverRepository.findById(transactionDTO.getIdDriver()).orElse(null);
+                if (driver != null) {
+                    driver.setDriverAvailability(Driver.DriverAvailability.BOOKED);
+                    driverRepository.save(driver);
+                } else {
+                    throw new ServiceException("Driver tidak ditemukan");
+                }
+            }
+
+            // change car availability
+            Vehicle vehicle2 = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
+            if (vehicle2 != null) {
+                vehicle2.setVehicleAvailability(Vehicle.VehicleAvailability.BOOKED);
+                vehicleRepository.save(vehicle2);
+            } else {
+                throw new ServiceException("Mobil tidak ditemukan");
+            }
+
+            //save transaction or create order
+            transactionRepository.save(transactionOrder);
+        }
+
+            TransactionDTORes response = new TransactionDTORes();
+            response.setPaymentMethodName(paymentMethod.getPaymentMethodName());
+            response.setNoRek(paymentMethod.getNoRek());
+            response.setVehicleName(vehicle.getVehicleName());
+            response.setPricePerHour(vehicle.getPricePerHour());
+            response.setDriverName(driver.getDriverName());
+            response.setCustomerName(customer.getCustomerName());
+            response.setEmail(customer.getEmail());
+            response.setPhoneNumber(customer.getPhoneNumber());
+            response.setStartHour(transactionOrder.getStartHour());
+            response.setFinishHour(transactionOrder.getFinishHour());
+            response.setTotalPrice(transactionOrder.getTotalPrice());
+
+            return response;
     }
 
 

@@ -24,10 +24,10 @@ public class DriverService {
     public Object getAllDrivers() {
         //show only available driver
         List<Driver> drivers = driverRepository.findAll();
-        List<Driver> results = new ArrayList<>();
         if (drivers.isEmpty()) {
             return false;
         }
+        List<Driver> results = new ArrayList<>();
         for (Driver d: drivers) {
             if (d.getDriverAvailability() == Driver.DriverAvailability.AVAILABLE) {
                 results.add(d);

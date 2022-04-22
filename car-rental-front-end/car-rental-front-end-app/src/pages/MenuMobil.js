@@ -1,24 +1,96 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Link, useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
 
 import './css/index.css'
 import './css/gallery.css'
 import axios from 'axios';
+import OnGoingList from '../component/OnGoingList';
 
 
 export const MenuMobil = () => {
   const [car, setCar] = useState([]);
-  const [driver, setDriver] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [driver, setDriver] = useState("");
+  const [drivers, setDrivers] = useState([]);
+  const [payment, setpayment] =useState("");
+  const [payments, setpayments] = useState([]);
+  const [TP, setTP] =useState("");
+  const [TK, setTK] =useState("");
+  
 
+  const [message, setMessage] = useState("");
+
+
+
+// API UNTUK FORM
+  let handleSubmit = async (e) => {
+
+    e.preventDefault();
+    console.log(TP,TK)
+    try {
+      let res = await fetch("http://localhost:8080/api/v1/order/create-order", {
+        method: "POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Accept":"application/json"
+        },
+        body: JSON.stringify({
+          customerName: name,
+          idVehicle: params.id,
+          email: email,
+          phoneNumber: String (phone),
+          idDriver:  parseInt(driver),
+          idPaymentMethod: parseInt(payment),
+          startHour: moment(TP).utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+          finishHour: moment(TK).utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+          
+        }),
+
+      });
+      navigate("/ongoingrental")
+
+      let resJson = await res.json();
+      if (res.status === 200) {
+        setName("");
+        setEmail("");
+        setPhone("");
+        setDriver("");
+        setpayment("");
+        setTP("")
+        setTK("")
+        setMessage("User created successfully");
+      } else {
+        setMessage("Some error occured");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+// API UNTUK TAMPILAN MOBIL
     useEffect(()=> {
       if (params.id) {
         fetchCars(params.id);
+        fetchDriver();
+        fetchPayment();
       }
     },[params]) 
 
+//kalo mau manggil total price
+    // useEffect(()=> {
+    //   if (TK && TP) {
+    //     console.log("disini memanggil total price")
+    //   }
+    // },[TK, TP]) 
+
+
+    // API MOBIL
     const fetchCars = async(id) => {
       try {
           const getCars = await fetch("http://localhost:8080/api/v1/vehicle/"+id);
@@ -29,18 +101,39 @@ export const MenuMobil = () => {
       }
     }
 
+    // API DRIVER
     const fetchDriver = async() => {
       try {
-        const drivers = [];
-        const payload = await axios.get("http://localhost:8080/api/v1/get-all-drivers");
-        drivers.push(...payload.data);
-        setDriver(drivers);
-        console.log(drivers);
-      } catch (error) {
         
+        await axios.get("http://localhost:8080/api/v1/driver/get-all-drivers").then(res =>{
+          setDrivers(res.data);
+
+        }).catch(err => {
+          console.error(err);
+        });
+        console.log(driver);
+      } catch (error) {
+        console.error(error);    
       }
     }
 
+    const fetchPayment = async() => {
+      try {
+        await axios.get("http://localhost:8080/api/v1/payment-method/get-all-payment-methods").then(res =>{
+          setpayments(res.data);
+
+        }).catch(err => {
+          console.error(err);
+        });
+        console.log(payment);
+      } catch (error) {
+        console.error(error);    
+      }
+    }
+
+
+console.log(new Date().toISOString())
+console.log(moment().utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
   return (
     <div>
 {/*============================================================ HEADER ===========================================================================*/}
@@ -88,81 +181,83 @@ export const MenuMobil = () => {
 
 {/*============================================================ BOX ===========================================================================*/}
       <div className="row mx-auto justify-content-center text-center">
-        <div className="gallery-grid2 container">
-          <h1>{car.vehicleName}</h1>
+        <div className="gallery-grid2 container gallery-frame3 text-center">
+            <p>Nama:    {car.vehicleName}</p>
+            <p>Kapasitas:    {car.vehicleCapacity}</p>
+            <p>Harga:   Rp.{car.pricePerHour}</p>         
         </div>
       </div>
 
 {/*========================================================== INPUT DATA ===========================================================================*/}
 
           <div className="gallery-frame3 mx-auto" >
-          
-            <form>
+           
+            <form onSubmit={handleSubmit}>
+               {/* NAMA */}
               <div class="mb-3">
                 <label for="form-control" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="exampleInputname" />
+                <input type="text" class="form-control" id="exampleInputname" value={name} onChange={(e) => setName(e.target.value)} required/>
               </div>
 
+              {/* EMAIL */}
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required/>
               </div>
 
+              {/* PHONE */}
               <div class="mb-3">
-                <label for="exampleInputEmail" class="form-label">No Telpon</label>
-                <input type="number" class="form-control" id="exampleInputEmail"/>
+                <label for="form-control" class="form-label">Telepon</label>
+                <input type="number" class="form-control" id="exampleInputnumber" value={phone} onChange={(e) => setPhone(e.target.value)} required/>
               </div>
 
+              {/* DRIVER */}
               <div class="input-group mb-3">
                 <div class="input-group mb-3">
-
-                  <select class="form-select" id="inputGroupSelect01">
-                    <option selected>Pilih Driver</option>
-                    <option value="0">One</option>
-                    <option value="1"></option>
-                    <option value="3">Three</option>
+                  <select class="form-select" id="inputGroupSelect01" value={driver} onChange={(e) => setDriver(e.target.value)} required>
+                    <option selected disable>Pilih Driver</option>
+                    {drivers.map(item => 
+                      <option value={item.idDriver}>{item.driverName}</option>
+                    )}
                   </select>
                 </div>
               </div>
 
+              {/* PEMBAYARAN */}
               <div class="mb-3">
                 <div class="input-group mb-3">
-                  <select class="form-select" id="inputGroupSelect01">
-                    <option selected>Pilih Pembayaran</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                  <select class="form-select" id="inputGroupSelect01" value={payment} onChange={(e) => setpayment(e.target.value)} required>
+                    <option selected disable>Pilih Pembayaran</option>
+                    {payments.map(item => 
+                      <option value={item.idPaymentMethod}>{item.paymentMethodName}</option>
+                    )}
                   </select>
                 </div>
               </div>
 
+              {/* TANGGAL PENANGGALAN */}
               <div class="mb-3">
                 <div className="row">
                   <div className="col-6">
                   <label for="tanggalpertama" class="form-label">Tanggal Pertama</label>
                     <div class="input-group mb-3">
-
-                      <input type="date" id="tanggal"></input>
-
+                      <input type="datetime-local" id="tanggal" value={TP} onChange={(e) => setTP(e.target.value)} required/>
                     </div>
                   </div>
 
                   <div className="col-6">
                   <label for="tanggalpertama" class="form-label">Tanggal Kedua</label>
                     <div class="input-group mb-3">
-
-                      <input type="date" id="tanggal"></input>
-
+                    <input type="datetime-local" min={moment(TP).utc().format("YYYY-MM-DDTHH:mm")} id="tanggal" value={TK} onChange={(e) => setTK(e.target.value)} required/>
                     </div>
                   </div>
 
                 </div>
               </div>
-
-      
-              <label for="totalharga" class="form-label">Total Harga Rp.</label>
+              {/* TOTAL DAN BUTTON */}
+              
               <div class="col-12">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Sewa Mobil</button>               
               </div>
             </form>
           

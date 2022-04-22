@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -17,7 +17,12 @@ public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
 
+    @Transactional
     public boolean createVehicle(Vehicle vehicle) {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        if (vehicles.equals(vehicle.getVehicleName())){
+            return false;
+        }
         vehicleRepository.save(vehicle);
         return true;
     }

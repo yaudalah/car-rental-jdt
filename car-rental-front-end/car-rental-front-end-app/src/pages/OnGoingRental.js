@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import OnGoingList from '../component/OnGoingList';
 import axios from 'axios';
 
@@ -9,7 +9,8 @@ import axios from 'axios';
 export const OnGoingRental = () => {
 
     const [car, setCarOnGoing] = useState([]);
-
+    const navigate = useNavigate();
+    
     useEffect(()=> {
         fetchCarsOnGoing();
     },[]) 
@@ -30,9 +31,9 @@ export const OnGoingRental = () => {
     return (
         <div>
             {/*============================================================ HEADER ===========================================================================*/}
-            <nav className="nav navbar fixed-top">
+            <nav className="nav navbar" style={{backgroundColor: "#cfd4ed"}}>
                 <div className="container-fluid d-flex justify-content-between w-90">
-                    <Link to="/" >Invisible Boat Mobile</Link>
+                    <Link to="/" ><h1>IBM</h1></Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">
                         <span className="navbar-toggler-icon"></span>
@@ -90,7 +91,9 @@ export const OnGoingRental = () => {
             
             <OnGoingList
                 car={car}
+                navigate={navigate}
             />
+            
 
             {/* ================================================================= FOOTER ===================================================== */}
 

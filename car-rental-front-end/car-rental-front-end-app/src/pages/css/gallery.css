@@ -55,9 +55,11 @@
 
 .gallery-frame2{
     background-color: rgb(255, 255, 255);
-    width: 500px;
+    width: 1220px;
     height: auto;
-    border: 2px solid #868585;
+    border: 1px solid rgba(var(--b6a,219,219,219),1);
+    border-radius: 5px;
+    justify-content: left;
     padding: 30px;
     margin: 20px;
 }
@@ -67,9 +69,26 @@
     width: 500px;
     height: auto;
     justify-content: right;
-    border: 2px solid #868585;
+    border: 2px solid rgba(var(--b6a,219,219,219),1);
     padding: 30px;
     margin: 20px;
+}
+
+.gallery-grid2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 5%;
+    row-gap: 1em;
+    flex-wrap: wrap;
+}
+
+.gallery-grid3 {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 5%;
+    row-gap: 1em;
+    flex-wrap: wrap;
 }
 
 .history{
@@ -82,21 +101,7 @@
     margin: 20px;
 }
 
-.gallery-grid3 {
-    display: flex;
-    justify-content: flex-end;
-    column-gap: 5%;
-    row-gap: 1em;
-    flex-wrap: wrap;
-}
-.gallery-grid2 {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    column-gap: 5%;
-    row-gap: 1em;
-    flex-wrap: wrap;
-}
+
 
 article {
     float: left;

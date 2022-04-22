@@ -19,7 +19,7 @@ public class RentalController {
 
     private final TransactionService transactionService;
 
-    @PostMapping
+    @PostMapping("/create-order")
     public ResponseEntity<Object> createOrder(@RequestBody TransactionDTO transactionDTO) {
         TransactionDTORes dataTransactionDTO = transactionService.createOrder(transactionDTO);
        if (dataTransactionDTO.equals(false)){
