@@ -7,6 +7,7 @@ import com.jdt.carrental.dto.map.OrderDetailsMap;
 import com.jdt.carrental.models.*;
 import com.jdt.carrental.repositories.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class TransactionService {
     private final DriverRepository driverRepository;
@@ -31,6 +33,8 @@ public class TransactionService {
     public TransactionDTORes createOrder(TransactionDTO transactionDTO) {
 
         Customer customer = new Customer();
+        //set customerID
+        customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
         Driver driver = new Driver();
         Vehicle vehicle = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
 
@@ -55,10 +59,10 @@ public class TransactionService {
                     .toMinutes() / 60
                 ).multiply(vehicle.getPricePerHour())
         );
+
         if (transactionDTO.getFinishHour().isAfter(transactionDTO.getStartHour())) {
 
             // save customer
-            customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
             customer.setCustomerName(transactionDTO.getCustomerName());
             customer.setEmail(transactionDTO.getEmail());
             customer.setPhoneNumber(transactionDTO.getPhoneNumber());
@@ -76,15 +80,11 @@ public class TransactionService {
             }
 
             // change car availability
-            Vehicle vehicle2 = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
-            if (vehicle2 != null) {
-                vehicle2.setVehicleAvailability(Vehicle.VehicleAvailability.BOOKED);
-                vehicleRepository.save(vehicle2);
-            } else {
-                throw new ServiceException("Mobil tidak ditemukan");
-            }
+            vehicle.setVehicleAvailability(Vehicle.VehicleAvailability.BOOKED);
+            vehicleRepository.save(vehicle);
 
             //save transaction or create order
+            log.info("transaction created");
             transactionRepository.save(transactionOrder);
         }
 

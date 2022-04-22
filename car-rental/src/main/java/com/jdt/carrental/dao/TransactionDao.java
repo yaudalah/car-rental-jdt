@@ -84,7 +84,8 @@ public class TransactionDao {
                     "INNER JOIN vehicle v on trx.id_vehicle = v.id_vehicle\n" +
                     "INNER JOIN driver d on trx.id_driver = d.id_driver\n" +
                     "INNER JOIN payment_method p on trx.id_payment_method = p.id_payment_method\n" +
-                    "WHERE trx.order_status = 1 ";
+                    "WHERE trx.order_status = 1\n" +
+                    "ORDER BY trx.id_transaction DESC";
 
 
     public List<OrderDetailsMap> getAllTransaction(){
