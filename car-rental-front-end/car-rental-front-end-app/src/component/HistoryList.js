@@ -19,13 +19,13 @@ const HistoryList = ({car}) => {
                                 <p>Harga Mobil per jam:   <strong>{car.pricePerHour}</strong></p>                                
                             </div>
                             <div className='OnGoing'>
+                                <p>Waktu Mulai:      <strong><small>{String(car.startHour).slice(0,16).replace(/T/g, " ")}</small></strong></p>
+                                <p>Waktu Selesai:   <strong><small>{String(car.finishHour).slice(0,16).replace(/T/g, " ")}</small></strong></p>                                
+                            </div>
+                            <div className='OnGoing'>
                                 <p>Jenis Pembayaran:      <strong>{car.paymentMethodName}</strong></p>
                                 <p>No Rek:                <strong>{car.noRek}</strong></p>
                                 <p>Harga Total:           <strong>{car.totalPrice}</strong></p>                                
-                            </div>
-                            <div className='OnGoing'>
-                                <p>Jam Mulai:      <strong>{String(car.startHour).slice(11,16)}</strong></p>
-                                <p>Jam Selesai:   <strong>{String(car.finishHour).slice(11,16)}</strong></p>                                
                             </div>
                         </div>
                     </div>

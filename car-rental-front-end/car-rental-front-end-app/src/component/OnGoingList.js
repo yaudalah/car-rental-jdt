@@ -35,11 +35,11 @@ const OnGoingList = ({car, navigate}) => {
                             <p>Harga Total:           <strong>{car.totalPrice}</strong></p>
                           </div>
                           <div className='OnGoing'>
-                            <p>Jam Mulai:      <strong>{String(car.startHour).slice(11,16)}</strong></p>
-                            <p>Jam Selesai:   <strong>{String(car.finishHour).slice(11,16)}</strong></p>
+                            <p>Jam Mulai:      <strong>{String(car.startHour).slice(0,16).replace(/T/g, " ")}</strong></p>
+                            <p>Jam Selesai:   <strong>{String(car.finishHour).slice(0,16).replace(/T/g, " ")}</strong></p>
                           </div>
                           <button 
-                          class="btn btn-primary mx-5" onClick={(e) => {
+                          class="btn btn-primary mx-2" onClick={(e) => {
                             e.preventDefault();
                             handleFinish(car.idTransaction)
                             navigate(`/history`)

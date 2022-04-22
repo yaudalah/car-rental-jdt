@@ -32,7 +32,10 @@ export const History = () => {
 {/*============================================================ HEADER ===========================================================================*/}
 <           nav className="nav navbar" style={{backgroundColor: "#cfd4ed"}}>
                 <div className="container-fluid d-flex justify-content-between w-90">
-                    <Link to="/" ><h1>IBM</h1></Link>
+                <Link to="/" >
+                    <h1>IBM</h1>
+                    <p>Invisible Boat Mobile</p>
+                </Link>  
                     <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">
                         <span className="navbar-toggler-icon"></span>

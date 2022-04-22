@@ -139,7 +139,10 @@ console.log(moment().utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
 {/*============================================================ HEADER ===========================================================================*/}
       <nav className="navbar navbar-expand-lg justify-content-evenly navbar-light bg-light rounded">
             <div className="container-fluid d-flex justify-content-between w-90">
-              <Link to="/" >Invisible Boat Mobile</Link>
+              <Link to="/" >
+                <h1>IBM</h1>
+                <p>Invisible Boat Mobile</p>
+              </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                     aria-controls="offcanvasRight">
                     <span className="navbar-toggler-icon"></span>

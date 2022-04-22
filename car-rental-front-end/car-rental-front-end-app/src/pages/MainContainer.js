@@ -13,7 +13,10 @@ export const MainContainer = () => {
 {/*============================================================ HEADER ===========================================================================*/}
         <nav className="nav navbar fixed-top" style={{backgroundColor: "#cfd4ed"}}>
             <div className="container-fluid d-flex justify-content-between w-90">
-                <a href="#"><h1>IBM</h1></a>
+            <Link to="/" >
+                <h1>IBM</h1>
+                <p>Invisible Boat Mobile</p>
+            </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                     aria-controls="offcanvasRight">
                     <span className="navbar-toggler-icon"></span>
