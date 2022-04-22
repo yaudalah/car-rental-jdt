@@ -30,6 +30,7 @@ public class TransactionService {
     @Transactional
     public TransactionDTORes createOrder(TransactionDTO transactionDTO) {
 
+        Customer customer = new Customer();
         Driver driver = new Driver();
         Vehicle vehicle = vehicleRepository.findById(transactionDTO.getIdVehicle()).orElse(null);
 
@@ -57,7 +58,6 @@ public class TransactionService {
         if (transactionDTO.getFinishHour().isAfter(transactionDTO.getStartHour())) {
 
             // save customer
-            Customer customer = new Customer();
             customer.setIdCustomer(UUID.randomUUID().getLeastSignificantBits());
             customer.setCustomerName(transactionDTO.getCustomerName());
             customer.setEmail(transactionDTO.getEmail());
